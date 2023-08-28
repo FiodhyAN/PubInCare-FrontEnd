@@ -140,6 +140,10 @@ export default function PelaporanScreen({navigation}: any) {
     ]);
   };
 
+  function updateLokasi(newLocation: string) {
+    setLokasi(newLocation);
+  }
+
   const [nama, setNama] = React.useState('');
   const [jenis, setJenis] = React.useState('');
   const [lokasi, setLokasi] = React.useState('');
@@ -200,9 +204,7 @@ export default function PelaporanScreen({navigation}: any) {
           title="Pilih Lokasi"
           onPress={() => {
             navigation.navigate('Map', {
-              updateLokasi: (newLocation: string) => {
-                setLokasi(newLocation); // Update the lokasi state here
-              },
+              updateLokasi: updateLokasi,
             });
           }}
         />
