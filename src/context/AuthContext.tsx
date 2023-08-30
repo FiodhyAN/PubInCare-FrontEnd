@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 import React, {ReactNode} from 'react';
 import {API} from '../config/API';
 import {ToastAndroid} from 'react-native';
@@ -36,11 +37,17 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     if (!name || !email || !password) {
       ToastAndroid.show('Please fill all the fields', ToastAndroid.SHORT);
     } else {
+      let data = qs.stringify({
+        name: name,
+        email: email,
+        password: password,
+      });
       setIsLoading(true);
       axios
-        .post(API + 'register', {
-          email: email,
-          password: password,
+        .post(API + 'register', data, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         })
         .then(response => {
           setIsLoading(false);
@@ -51,8 +58,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
         })
         .catch(error => {
           setIsLoading(false);
-          ToastAndroid.show('Email already exists', ToastAndroid.SHORT);
-          console.log(error);
+          ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
         });
     }
   };
@@ -92,7 +98,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
       let user = await AsyncStorage.getItem('user');
       user = user ? JSON.parse(user) : null;
       console.log(user);
-      
+
       if (user) {
         setUserInfo(user);
       }
