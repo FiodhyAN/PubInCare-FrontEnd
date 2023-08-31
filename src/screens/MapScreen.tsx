@@ -45,7 +45,11 @@ export default function MapScreen({navigation, route}: any) {
     },
   });
 
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+    address: '',
+  });
   const [region, setRegion] = useState({
     latitude: 0,
     longitude: 0,
@@ -56,18 +60,36 @@ export default function MapScreen({navigation, route}: any) {
   const mapRef = React.useRef<MapView>(null);
 
   useEffect(() => {
-    Geolocation.getCurrentPosition(
-      info => {
-        const {latitude, longitude} = info.coords;
-        setRegion({
-          ...region,
-          latitude,
-          longitude,
-        });
-        getLocationAddress(latitude, longitude);
-      },
-      error => console.error('Error getting location:', error),
-    );
+    if (
+      route.params &&
+      route.params.latitude == 0 &&
+      route.params.longitude == 0
+    ) {
+      Geolocation.getCurrentPosition(
+        info => {
+          const {latitude, longitude} = info.coords;
+          setRegion({
+            ...region,
+            latitude,
+            longitude,
+          });
+          getLocationAddress(latitude, longitude);
+        },
+        error => console.error('Error getting location:', error),
+      );
+    } else {
+      setRegion({
+        ...region,
+        latitude: route.params.latitude,
+        longitude: route.params.longitude,
+      });
+      setLocation({
+        ...location,
+        latitude: route.params.latitude,
+        longitude: route.params.longitude,
+        address: route.params.address,
+      });
+    }
   }, []);
 
   function getCurrentLocation() {
@@ -101,7 +123,12 @@ export default function MapScreen({navigation, route}: any) {
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
       );
       const json = await response.json();
-      setLocation(json.display_name);
+      const NewerLocation = {
+        latitude,
+        longitude,
+        address: json.display_name,
+      };
+      setLocation(NewerLocation);
     } catch (error) {
       console.error('Error getting location address:', error);
     }
@@ -132,7 +159,7 @@ export default function MapScreen({navigation, route}: any) {
             longitude: region.longitude,
           }}
           title={'Your Location'}
-          description={location}
+          description={location.address}
           draggable={true}
           onDragEnd={e => {
             const {latitude, longitude} = e.nativeEvent.coordinate;

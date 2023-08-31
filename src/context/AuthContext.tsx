@@ -71,15 +71,20 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
       );
       return;
     } else {
+      let data = qs.stringify({
+        email: email,
+        password: password,
+      });
       setIsLoading(true);
       axios
-        .post(API + 'login', {
-          email: email,
-          password: password,
+        .post(API + 'login', data, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         })
         .then(function (response) {
-          setUserInfo(response.data);
-          AsyncStorage.setItem('user', JSON.stringify(response.data));
+          setUserInfo(response.data.user);
+          AsyncStorage.setItem('user', JSON.stringify(response.data.user));
           setIsLoading(false);
         })
         .catch(function (error) {
@@ -97,7 +102,6 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
       setSplashLoading(true);
       let user = await AsyncStorage.getItem('user');
       user = user ? JSON.parse(user) : null;
-      console.log(user);
 
       if (user) {
         setUserInfo(user);

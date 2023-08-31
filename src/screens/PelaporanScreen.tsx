@@ -103,11 +103,9 @@ export default function PelaporanScreen({navigation}: any) {
                 setFoto(selectedUri);
                 console.log('Response = ', selectedUri);
               } else {
-                // Handle the case where selectedUri is undefined
                 console.log('Selected URI is undefined.');
               }
             } else {
-              // Handle the case where no assets were selected
               console.log('No assets selected.');
             }
           }),
@@ -127,11 +125,9 @@ export default function PelaporanScreen({navigation}: any) {
                   setFoto(selectedUri);
                   console.log('Response = ', selectedUri);
                 } else {
-                  // Handle the case where selectedUri is undefined
                   console.log('Selected URI is undefined.');
                 }
               } else {
-                // Handle the case where no assets were selected
                 console.log('No assets selected.');
               }
             },
@@ -140,13 +136,17 @@ export default function PelaporanScreen({navigation}: any) {
     ]);
   };
 
-  function updateLokasi(newLocation: string) {
+  function updateLokasi(newLocation: any) {
     setLokasi(newLocation);
   }
 
   const [nama, setNama] = React.useState('');
   const [jenis, setJenis] = React.useState('');
-  const [lokasi, setLokasi] = React.useState('');
+  const [lokasi, setLokasi] = React.useState({
+    latitude: 0,
+    longitude: 0,
+    address: '',
+  });
   const [keluhan, setKeluhan] = React.useState('');
   const [foto, setFoto] = React.useState<string>('');
 
@@ -199,12 +199,15 @@ export default function PelaporanScreen({navigation}: any) {
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Lokasi</Text>
-        {lokasi !== '' ? <Text style={styles.lokasiText}>{lokasi}</Text> : null}
+        {lokasi.address !== '' ? <Text style={styles.lokasiText}>{lokasi.address}</Text> : null}
         <Button
           title="Pilih Lokasi"
           onPress={() => {
             navigation.navigate('Map', {
               updateLokasi: updateLokasi,
+              latitude: lokasi.latitude,
+              longitude: lokasi.longitude,
+              address: lokasi.address,
             });
           }}
         />
@@ -242,7 +245,7 @@ export default function PelaporanScreen({navigation}: any) {
             if (
               nama === '' ||
               jenis === '' ||
-              lokasi === '' ||
+              lokasi.address === '' ||
               keluhan === '' ||
               foto === ''
             ) {
@@ -254,7 +257,7 @@ export default function PelaporanScreen({navigation}: any) {
               if (jenis === '') {
                 errorMessages.push('Jenis Pengaduan harus diisi');
               }
-              if (lokasi === '') {
+              if (lokasi.address === '') {
                 errorMessages.push('Lokasi harus diisi');
               }
               if (keluhan === '') {
@@ -268,7 +271,11 @@ export default function PelaporanScreen({navigation}: any) {
               return;
             }
             setNama('');
-            setLokasi('');
+            setLokasi({
+              latitude: 0,
+              longitude: 0,
+              address: '',
+            });
             setKeluhan('');
             setJenis('');
             setFoto('');
