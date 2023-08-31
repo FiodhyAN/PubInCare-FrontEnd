@@ -127,13 +127,23 @@ export default function LoginScreen({navigation, route}: any) {
 
       <View style={{flexDirection: 'row', marginTop: 20}}>
         <Text>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Register');
+            setEmail('');
+            setPassword('');
+          }}>
           <Text style={{color: '#279EFF'}}>Register</Text>
         </TouchableOpacity>
       </View>
       <View style={{flexDirection: 'row', marginTop: 5}}>
         <Text>Forgot Password? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotPW')}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('ForgotPW');
+            setEmail('');
+            setPassword('');
+          }}>
           <Text style={{color: '#279EFF'}}>Reset</Text>
         </TouchableOpacity>
       </View>
