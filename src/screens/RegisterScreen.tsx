@@ -5,7 +5,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
   Image,
 } from 'react-native';
 import {AuthContext} from '../context/AuthContext';

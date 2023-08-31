@@ -123,9 +123,8 @@ export default function PelaporanScreen({navigation}: any) {
                 const selectedUri = response.assets[0].uri;
                 if (selectedUri) {
                   setFoto(selectedUri);
-                  console.log('Response = ', selectedUri);
                 } else {
-                  console.log('Selected URI is undefined.');
+                  Alert.alert('Error', 'Selected URI is undefined.');
                 }
               } else {
                 console.log('No assets selected.');

@@ -21,6 +21,12 @@ export const AuthContext = React.createContext({
   userInfo: null as string | null,
   splashLoading: false,
   logout: () => {},
+  changePW: (
+    email: string,
+    password: string,
+    confirmPassword: string,
+    navigation: any,
+  ) => {},
 });
 
 export const AuthProvider = ({children}: AuthProviderProps) => {
@@ -53,7 +59,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
           setIsLoading(false);
           navigation.navigate('Login', {
             showToast: true,
-            toastMessage: 'Registration Successful Please Login',
+            toastMessage: response.data.message,
           });
         })
         .catch(error => {
@@ -97,6 +103,45 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     }
   };
 
+  const changePW = (
+    email: string,
+    password: string,
+    confirmPassword: string,
+    navigation: any,
+  ) => {
+    if (password != confirmPassword) {
+      ToastAndroid.show(
+        'Password and Confirm Password must be same',
+        ToastAndroid.SHORT,
+      );
+    } else {
+      let data = qs.stringify({
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+      });
+      setIsLoading(true);
+      axios
+        .put(API + 'change-password', data, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+        .then(function (response) {
+          setIsLoading(false);
+          navigation.navigate('Login', {
+            showToast: true,
+            toastMessage: response.data.message,
+          });
+          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+        })
+        .catch(function (error) {
+          setIsLoading(false);
+          ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+        });
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -124,7 +169,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider
-      value={{register, isLoading, login, userInfo, splashLoading, logout}}>
+      value={{register, isLoading, login, userInfo, splashLoading, logout, changePW}}>
       {children}
     </AuthContext.Provider>
   );

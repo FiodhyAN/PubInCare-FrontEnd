@@ -8,12 +8,11 @@ import {
   Image,
   ToastAndroid,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from '../context/AuthContext';
-import {useEffect} from 'react';
+import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function LoginScreen({navigation, route}: any) {
+export default function App({navigation}: any) {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -47,8 +46,8 @@ export default function LoginScreen({navigation, route}: any) {
       backgroundColor: '#fff',
     },
     logoImage: {
-      width: 400,
-      height: 400,
+      width: 300,
+      height: 300,
       resizeMode: 'contain',
     },
     logoContainer: {
@@ -56,26 +55,24 @@ export default function LoginScreen({navigation, route}: any) {
       justifyContent: 'center',
       marginBottom: 10,
     },
+    eyeIcon: {
+      position: 'absolute',
+      right: 30,
+    },
     inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-    },
-    eyeIcon: {
-      position: 'absolute',
-      right: 20,
+      justifyContent: 'center',
     },
   });
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const {login, isLoading} = React.useContext(AuthContext);
+  const [confirmPassword, setConfirmPassword] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(true);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(true);
 
-  useEffect(() => {
-    if (route.params?.showToast && route.params?.toastMessage) {
-      ToastAndroid.show(route.params.toastMessage, ToastAndroid.SHORT);
-    }
-  }, [route.params]);
+  const {changePW, isLoading} = React.useContext(AuthContext);
 
   return (
     <View style={styles.container}>
@@ -86,7 +83,7 @@ export default function LoginScreen({navigation, route}: any) {
           style={styles.logoImage}
         />
       </View>
-      <Text style={styles.text}>Login</Text>
+      <Text style={styles.text}>Change Password</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter Email"
@@ -97,10 +94,10 @@ export default function LoginScreen({navigation, route}: any) {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Enter Password"
+          placeholder="Enter New Password"
+          value={password}
           keyboardType="default"
           secureTextEntry={showPassword}
-          value={password}
           onChangeText={text => setPassword(text)}
         />
         <TouchableOpacity
@@ -115,26 +112,45 @@ export default function LoginScreen({navigation, route}: any) {
           />
         </TouchableOpacity>
       </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm New Password"
+          value={confirmPassword}
+          keyboardType="default"
+          secureTextEntry={showConfirmPassword}
+          onChangeText={text => setConfirmPassword(text)}
+        />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => {
+            setShowConfirmPassword(!showConfirmPassword);
+          }}>
+          <Icon
+            name={showConfirmPassword ? 'eye' : 'eye-off'}
+            size={20}
+            color="gray"
+          />
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity
         style={styles.buttonLogin}
         onPress={() => {
-          login(email, password);
+            if (password != confirmPassword) {
+                ToastAndroid.show('Password and Confirm Password must be same', ToastAndroid.SHORT);
+            } else {
+                changePW(email, password, confirmPassword, navigation);
+            }
         }}>
         <Text style={{color: '#fff', textAlign: 'center', fontSize: 20}}>
-          Sign In
+            Change Password
         </Text>
       </TouchableOpacity>
 
       <View style={{flexDirection: 'row', marginTop: 20}}>
-        <Text>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={{color: '#279EFF'}}>Register</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={{flexDirection: 'row', marginTop: 5}}>
-        <Text>Forgot Password? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotPW')}>
-          <Text style={{color: '#279EFF'}}>Reset</Text>
+        <Text>Already have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={{color: '#279EFF'}}>Login</Text>
         </TouchableOpacity>
       </View>
     </View>
