@@ -55,7 +55,7 @@ export default function PelaporanScreen({navigation}: any) {
       marginRight: 10,
     },
     kirimButton: {
-      backgroundColor: '#65FF27',
+      backgroundColor: '#279eff',
       paddingVertical: 10,
       paddingHorizontal: 20,
       borderRadius: 5,
@@ -68,7 +68,7 @@ export default function PelaporanScreen({navigation}: any) {
     },
     buttonKirimText: {
       fontSize: 18,
-      color: '#000',
+      color: '#fff',
       textAlign: 'center',
     },
     fotoContainer: {
