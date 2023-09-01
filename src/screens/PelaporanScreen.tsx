@@ -9,9 +9,14 @@ import {
   Image,
   ScrollView,
   Button,
+  ActivityIndicator,
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import SelectDropdown from 'react-native-select-dropdown';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import FormData from 'form-data';
+import { API } from '../config/API';
 
 export default function PelaporanScreen({navigation}: any) {
   const styles = StyleSheet.create({
@@ -86,6 +91,33 @@ export default function PelaporanScreen({navigation}: any) {
     },
   });
 
+  const getUserId = async () => {
+    const value = await AsyncStorage.getItem('user');
+    if (value !== null) {
+      setUserId(JSON.parse(value).id);
+      setNama(JSON.parse(value).name);
+    }
+  };
+
+  React.useEffect(() => {
+    getUserId();
+  }, []);
+
+  const resetForm = () => {
+    getUserId();
+    setLokasi({
+      latitude: 0,
+      longitude: 0,
+      address: '',
+    });
+    setKeluhan('');
+    setJenis('');
+    setFoto('');
+    if (jenisDropdownRef.current) {
+      jenisDropdownRef.current.reset();
+    }
+  };
+
   const imagePicker = () => {
     Alert.alert('Silahkan Pilih Foto', '', [
       {
@@ -101,9 +133,8 @@ export default function PelaporanScreen({navigation}: any) {
               const selectedUri = response.assets[0].uri;
               if (selectedUri) {
                 setFoto(selectedUri);
-                console.log('Response = ', selectedUri);
               } else {
-                console.log('Selected URI is undefined.');
+                Alert.alert('Error', 'Selected URI is undefined.');
               }
             } else {
               console.log('No assets selected.');
@@ -139,6 +170,47 @@ export default function PelaporanScreen({navigation}: any) {
     setLokasi(newLocation);
   }
 
+  function create_report() {
+    const filename = foto.split('/').pop();
+    const fileExtension = filename?.split('.').pop();
+    const validExtensions = ['jpg', 'jpeg', 'png'];
+    
+    if (!validExtensions.includes(fileExtension?.toLowerCase() || '')) {
+      Alert.alert('Error', 'File yang diupload harus berupa gambar.');
+      return;
+    }
+    let data = new FormData();
+    data.append('user_id', userId);
+    data.append('nama_pengadu', nama);
+    data.append('jenis_pengaduan', jenis);
+    data.append('keluhan', keluhan);
+    data.append('lokasi', lokasi.address);
+    data.append('image_url', {
+      uri: foto,
+      name: filename,
+      type: `image/${fileExtension?.toLowerCase()}`,
+    });
+
+    axios.post(`${API}/reports/store`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(res => {
+      resetForm();
+      setIsLoading(false);
+      console.log(res)
+      Alert.alert('Terima Kasih', res.data.message);
+    })
+    .catch(err => {
+      setIsLoading(false);
+      console.log(err.response.data)
+    })
+  }
+
+    
+
+  const [userId, setUserId] = React.useState(0);
   const [nama, setNama] = React.useState('');
   const [jenis, setJenis] = React.useState('');
   const [lokasi, setLokasi] = React.useState({
@@ -148,6 +220,7 @@ export default function PelaporanScreen({navigation}: any) {
   });
   const [keluhan, setKeluhan] = React.useState('');
   const [foto, setFoto] = React.useState<string>('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const jenisDropdownRef = React.useRef<SelectDropdown>(null);
 
@@ -212,7 +285,7 @@ export default function PelaporanScreen({navigation}: any) {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Keluhan</Text>
+        <Text style={styles.label}>{jenis === 'Perbaikan' ? 'Keluhan' : 'Kebutuhan'}</Text>
         <TextInput
           style={styles.input}
           value={keluhan}
@@ -220,7 +293,7 @@ export default function PelaporanScreen({navigation}: any) {
           multiline={true}
           numberOfLines={5}
           textAlignVertical="top"
-          placeholder="Masukkan Keluhan"
+          placeholder={jenis === 'Perbaikan' ? 'Masukkan Keluhan' : 'Masukkan Kebutuhan'}
         />
       </View>
       <View style={styles.buttonContainer}>
@@ -241,6 +314,7 @@ export default function PelaporanScreen({navigation}: any) {
         <TouchableOpacity
           style={styles.kirimButton}
           onPress={() => {
+            setIsLoading(true);
             if (
               nama === '' ||
               jenis === '' ||
@@ -267,23 +341,17 @@ export default function PelaporanScreen({navigation}: any) {
               }
 
               Alert.alert('Error', errorMessages.join('\n'));
+            } else {
+              create_report();
               return;
             }
-            setNama('');
-            setLokasi({
-              latitude: 0,
-              longitude: 0,
-              address: '',
-            });
-            setKeluhan('');
-            setJenis('');
-            setFoto('');
-            if (jenisDropdownRef.current) {
-              jenisDropdownRef.current.reset();
-            }
-            Alert.alert('Terima Kasih', 'Pengaduan Anda telah kami terima');
+            
           }}>
-          <Text style={styles.buttonKirimText}>Kirim</Text>
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonKirimText}>Kirim</Text>
+            )}
         </TouchableOpacity>
       </View>
     </ScrollView>
