@@ -199,7 +199,6 @@ export default function PelaporanScreen({navigation}: any) {
     .then(res => {
       resetForm();
       setIsLoading(false);
-      console.log(res)
       Alert.alert('Terima Kasih', res.data.message);
     })
     .catch(err => {

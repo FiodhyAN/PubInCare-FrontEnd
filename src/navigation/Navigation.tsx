@@ -11,6 +11,7 @@ import MapScreen from '../screens/MapScreen';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetScreen from '../screens/NoInternetScreen';
 import ForgotPWScreen from '../screens/ForgotPWScreen';
+import DetailLaporanScreen from '../screens/DetailLaporanScreen';
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
@@ -59,6 +60,20 @@ export default function Navigation() {
                 component={MapScreen}
                 options={{
                   headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="DetailLaporan"
+                component={DetailLaporanScreen}
+                options={{
+                  headerShown: true,
+                  title: 'Detail Laporan',
+                  headerTitleAlign: 'center',
+                  headerStyle: {
+                    backgroundColor: '#00BFFF',
+                  },
+                  headerTintColor: '#fff',
+                  animation: 'slide_from_right'
                 }}
               />
             </>

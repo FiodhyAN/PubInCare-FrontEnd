@@ -45,6 +45,7 @@ export default function PelaporanNavigation() {
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons name="history" color={color} size={size} />
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -59,7 +60,6 @@ export default function PelaporanNavigation() {
             />
           ),
         }}
-        // make this screen as the initial screen
         initialParams={{initialRoute: true}}
       />
       <Tab.Screen
