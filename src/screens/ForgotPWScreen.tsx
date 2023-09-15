@@ -11,19 +11,21 @@ import {
 import {AuthContext} from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ThemeContext } from '../context/ThemeContext';
 
 export default function App({navigation}: any) {
+  const {isDark} = React.useContext(ThemeContext)
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: isDark ? '#222' : '#fff',
       alignItems: 'center',
       justifyContent: 'center',
     },
     text: {
       fontSize: 35,
       fontWeight: 'bold',
-      color: '#279EFF',
+      color: isDark ? '#DDD' : '#279EFF',
     },
     input: {
       height: 40,
@@ -32,9 +34,11 @@ export default function App({navigation}: any) {
       padding: 10,
       width: 300,
       borderRadius: 10,
+      borderColor: isDark ? '#DDD' : '#000',
+      color: isDark ? '#DDD' : '#000',
     },
     buttonLogin: {
-      backgroundColor: '#279EFF',
+      backgroundColor: isDark ? '#001F3F' : '#279EFF',
       padding: 10,
       width: 300,
       borderRadius: 10,
@@ -87,6 +91,7 @@ export default function App({navigation}: any) {
       <TextInput
         style={styles.input}
         placeholder="Enter Email"
+        placeholderTextColor={isDark ? '#DDD' : '#000'}
         value={email}
         keyboardType="email-address"
         onChangeText={text => setEmail(text)}
@@ -95,6 +100,7 @@ export default function App({navigation}: any) {
         <TextInput
           style={styles.input}
           placeholder="Enter New Password"
+          placeholderTextColor={isDark ? '#DDD' : '#000'}
           value={password}
           keyboardType="default"
           secureTextEntry={showPassword}
@@ -116,6 +122,7 @@ export default function App({navigation}: any) {
         <TextInput
           style={styles.input}
           placeholder="Confirm New Password"
+          placeholderTextColor={isDark ? '#DDD' : '#000'}
           value={confirmPassword}
           keyboardType="default"
           secureTextEntry={showConfirmPassword}
@@ -148,7 +155,7 @@ export default function App({navigation}: any) {
       </TouchableOpacity>
 
       <View style={{flexDirection: 'row', marginTop: 20}}>
-        <Text>Already have an account? </Text>
+        <Text style={{ color: isDark ? '#DDD' : '#000' }}>Already have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={{color: '#279EFF'}}>Login</Text>
         </TouchableOpacity>

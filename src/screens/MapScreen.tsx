@@ -56,6 +56,10 @@ export default function MapScreen({navigation, route}: any) {
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
   });
+  const [markers, setMarkers] = useState({
+    latitude: 0,
+    longitude: 0,
+  }); // <-- Add this line
 
   const mapRef = React.useRef<MapView>(null);
 
@@ -74,6 +78,11 @@ export default function MapScreen({navigation, route}: any) {
             longitude,
           });
           getLocationAddress(latitude, longitude);
+          setMarkers({
+            ...markers,
+            latitude,
+            longitude,
+          });
         },
         error => console.error('Error getting location:', error),
       );
@@ -88,6 +97,11 @@ export default function MapScreen({navigation, route}: any) {
         latitude: route.params.latitude,
         longitude: route.params.longitude,
         address: route.params.address,
+      });
+      setMarkers({
+        ...markers,
+        latitude: route.params.latitude,
+        longitude: route.params.longitude,
       });
     }
   }, []);
@@ -140,6 +154,7 @@ export default function MapScreen({navigation, route}: any) {
     }
     navigation.goBack();
   }
+  console.log(markers)
 
   return (
     <View style={styles.container}>
@@ -152,12 +167,22 @@ export default function MapScreen({navigation, route}: any) {
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
-        region={region}>
+        region={region}
+        onPress={e => {
+          const {latitude, longitude} = e.nativeEvent.coordinate;
+          setMarkers({
+            ...markers,
+            latitude,
+            longitude,
+          });
+          getLocationAddress(latitude, longitude);
+        }}
+        >
         <Marker
-          coordinate={{
-            latitude: region.latitude,
-            longitude: region.longitude,
-          }}
+          coordinate={{ 
+            latitude: markers.latitude,
+            longitude: markers.longitude,
+           }}
           title={'Your Location'}
           description={location.address}
           draggable={true}

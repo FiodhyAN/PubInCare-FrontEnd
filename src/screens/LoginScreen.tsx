@@ -12,19 +12,21 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from '../context/AuthContext';
 import {useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ThemeContext } from '../context/ThemeContext';
 
 export default function LoginScreen({navigation, route}: any) {
+  const {isDark} = React.useContext(ThemeContext)
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: isDark ? '#222' : '#fff',
       alignItems: 'center',
       justifyContent: 'center',
     },
     text: {
       fontSize: 35,
       fontWeight: 'bold',
-      color: '#279EFF',
+      color: isDark ? '#DDD' : '#279EFF',
     },
     input: {
       height: 40,
@@ -33,9 +35,11 @@ export default function LoginScreen({navigation, route}: any) {
       padding: 10,
       width: 300,
       borderRadius: 10,
+      borderColor: isDark ? '#DDD' : '#000',
+      color: isDark ? '#DDD' : '#000',
     },
     buttonLogin: {
-      backgroundColor: '#279EFF',
+      backgroundColor: isDark ? '#001F3F' : '#279EFF',
       padding: 10,
       width: 300,
       borderRadius: 10,
@@ -90,6 +94,7 @@ export default function LoginScreen({navigation, route}: any) {
       <TextInput
         style={styles.input}
         placeholder="Enter Email"
+        placeholderTextColor={isDark ? '#DDD' : '#000'}
         value={email}
         keyboardType="email-address"
         onChangeText={text => setEmail(text)}
@@ -98,6 +103,7 @@ export default function LoginScreen({navigation, route}: any) {
         <TextInput
           style={styles.input}
           placeholder="Enter Password"
+          placeholderTextColor={isDark ? '#DDD' : '#000'}
           keyboardType="default"
           secureTextEntry={showPassword}
           value={password}
@@ -120,13 +126,13 @@ export default function LoginScreen({navigation, route}: any) {
         onPress={() => {
           login(email, password);
         }}>
-        <Text style={{color: '#fff', textAlign: 'center', fontSize: 20}}>
+        <Text style={{color: isDark ? '#DDD' : '#fff', textAlign: 'center', fontSize: 20}}>
           Sign In
         </Text>
       </TouchableOpacity>
 
       <View style={{flexDirection: 'row', marginTop: 20}}>
-        <Text>Don't have an account? </Text>
+        <Text style={{ color: isDark ? '#ddd' : '#000' }}>Don't have an account? </Text>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('Register');
@@ -137,7 +143,7 @@ export default function LoginScreen({navigation, route}: any) {
         </TouchableOpacity>
       </View>
       <View style={{flexDirection: 'row', marginTop: 5}}>
-        <Text>Forgot Password? </Text>
+        <Text style={{ color: isDark ? '#ddd' : '000' }}>Forgot Password? </Text>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ForgotPW');

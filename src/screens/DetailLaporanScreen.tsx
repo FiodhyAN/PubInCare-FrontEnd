@@ -13,6 +13,7 @@ import {
 import {API} from '../config/API';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+import { ThemeContext } from '../context/ThemeContext';
 
 interface Report {
   no_laporan: string;
@@ -29,6 +30,7 @@ export default function DetailLaporanScreen({route}: any) {
 
   const [report, setReport] = React.useState<Report | null>(null);
   const [refreshing, setRefreshing] = React.useState(false);
+  const {isDark} = React.useContext(ThemeContext)
 
   const getReport = async () => {
     axios
@@ -50,7 +52,7 @@ export default function DetailLaporanScreen({route}: any) {
       <View
         style={{
           flex: 1,
-          backgroundColor: '#fff',
+          backgroundColor: isDark ? '#222' : '#fff',
           alignItems: 'center',
           justifyContent: 'center',
         }}>
@@ -70,7 +72,7 @@ export default function DetailLaporanScreen({route}: any) {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: isDark ? '#222' : '#fff',
       paddingHorizontal: 20,
       paddingTop: 20,
     },
@@ -82,6 +84,7 @@ export default function DetailLaporanScreen({route}: any) {
       fontSize: 24,
       fontWeight: 'bold',
       marginBottom: 20,
+      color: isDark ? '#DDD' : '#000',
     },
     image: {
       width: 300,
@@ -93,10 +96,12 @@ export default function DetailLaporanScreen({route}: any) {
       fontSize: 18,
       fontWeight: 'bold',
       marginBottom: 10,
+      color: isDark ? '#DDD' : '#000',
     },
     bodyText: {
       fontSize: 16,
       marginBottom: 15,
+      color: isDark ? '#DDD' : '#000',
     },
     statusText: {
       fontSize: 18,
@@ -105,7 +110,7 @@ export default function DetailLaporanScreen({route}: any) {
     },
     button: {
       width: '100%',
-      backgroundColor: '#279EFF',
+      backgroundColor: isDark ? '#001F3F' : '#279EFF',
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
@@ -159,11 +164,11 @@ export default function DetailLaporanScreen({route}: any) {
             </Text>
           ) : report.status === true ? (
             <Text style={styles.statusText}>
-              <Icon name="check" size={20} color="green" /> Diterima
+              <Icon name="check" size={20} color="green" /> Diterima Sistem
             </Text>
           ) : (
             <Text style={styles.statusText}>
-              <Icon name="times" size={20} color="red" /> Ditolak
+              <Icon name="times" size={20} color="red" /> Ditolak Sistem
             </Text>
           )}
         </View>
@@ -173,8 +178,8 @@ export default function DetailLaporanScreen({route}: any) {
           Alert.alert('Coming Soon', 'Fitur ini akan segera hadir');
         }}
         style={styles.button}>
-        <Text style={{color: '#ffffff', fontSize: 16, fontWeight: 'bold'}}>
-          Chat Admin
+        <Text style={{color: isDark ? '#DDD' : '#fff', fontSize: 16, fontWeight: 'bold'}}>
+          Cek Status
         </Text>
       </TouchableOpacity>
     </ScrollView>

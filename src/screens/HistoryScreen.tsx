@@ -16,12 +16,14 @@ import {API} from '../config/API';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { ThemeContext } from '../context/ThemeContext';
 
 export default function HistoryScreen({navigation}: any) {
+  const {isDark} = React.useContext(ThemeContext);
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: isDark ? '#222' : '#fff',
       alignItems: 'center',
       paddingTop: 20,
       paddingHorizontal: 20,
@@ -31,7 +33,7 @@ export default function HistoryScreen({navigation}: any) {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    searhBar: {
+    searchBar: {
       flexDirection: 'row',
       paddingHorizontal: 20,
       backgroundColor: '#fff',
@@ -113,8 +115,10 @@ export default function HistoryScreen({navigation}: any) {
     <ScrollView
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }>
-      <View style={styles.searhBar}>
+      }
+      style={{backgroundColor: isDark ? '#222' : '#fff'}}
+      >
+      <View style={styles.searchBar}>
         <TextInput
           placeholder='Search'
           style={{flex: 1}}

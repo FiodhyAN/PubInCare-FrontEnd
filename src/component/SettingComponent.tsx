@@ -1,8 +1,10 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ThemeContext } from '../context/ThemeContext';
 
 export default function SettingComponent(props: any) {
+  const {isDark} = React.useContext(ThemeContext)
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -13,12 +15,12 @@ export default function SettingComponent(props: any) {
       borderBottomColor: '#E0E0E0',
     },
     iconContainer: {
-      backgroundColor: '#279EFF',
+      backgroundColor: isDark ? '#001F3F' : '#279EFF',
       borderRadius: 10,
       padding: 10,
     },
     iconStyle: {
-      color: '#fff',
+      color: '#DDD',
       fontSize: 24,
     },
     textContainer: {
@@ -28,14 +30,14 @@ export default function SettingComponent(props: any) {
     title: {
       fontSize: 18,
       fontWeight: 'bold',
-      color: '#000',
+      color: isDark ? '#DDD' : '#000',
     },
     subtitle: {
       fontSize: 14,
       color: '#757575',
     },
     arrowIcon: {
-      color: '#279EFF',
+      color: isDark ? '#DDD' :'#279EFF',
       fontSize: 24,
     },
   });

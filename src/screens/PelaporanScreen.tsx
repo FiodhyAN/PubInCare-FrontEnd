@@ -8,7 +8,6 @@ import {
   Alert,
   Image,
   ScrollView,
-  Button,
   ActivityIndicator,
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -16,13 +15,15 @@ import SelectDropdown from 'react-native-select-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import FormData from 'form-data';
-import { API } from '../config/API';
+import {API} from '../config/API';
+import {ThemeContext} from '../context/ThemeContext';
 
 export default function PelaporanScreen({navigation}: any) {
+  const {isDark} = React.useContext(ThemeContext);
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: isDark ? '#222' : '#fff',
     },
     inputContainer: {
       marginVertical: 10,
@@ -32,6 +33,7 @@ export default function PelaporanScreen({navigation}: any) {
       fontSize: 16,
       marginBottom: 5,
       fontWeight: 'bold',
+      color: isDark ? '#DDD' : '#000',
     },
     input: {
       fontSize: 16,
@@ -40,11 +42,7 @@ export default function PelaporanScreen({navigation}: any) {
       borderRadius: 5,
       paddingVertical: 8,
       paddingHorizontal: 10,
-    },
-    mapIcon: {
-      position: 'absolute',
-      right: 10,
-      top: 35,
+      color: isDark ? '#DDD' : '#000',
     },
     buttonContainer: {
       flexDirection: 'row',
@@ -52,7 +50,7 @@ export default function PelaporanScreen({navigation}: any) {
       marginHorizontal: 20,
     },
     fotoButton: {
-      backgroundColor: '#279eff',
+      backgroundColor: isDark ? '#001F3F' : '#279EFF',
       paddingVertical: 10,
       paddingHorizontal: 20,
       borderRadius: 5,
@@ -60,7 +58,7 @@ export default function PelaporanScreen({navigation}: any) {
       marginRight: 10,
     },
     kirimButton: {
-      backgroundColor: '#279eff',
+      backgroundColor: isDark ? '#001F3F' : '#279EFF',
       paddingVertical: 10,
       paddingHorizontal: 20,
       borderRadius: 5,
@@ -68,12 +66,12 @@ export default function PelaporanScreen({navigation}: any) {
     },
     buttonFotoText: {
       fontSize: 18,
-      color: '#fff',
+      color: isDark ? '#DDD' : '#fff',
       textAlign: 'center',
     },
     buttonKirimText: {
       fontSize: 18,
-      color: '#fff',
+      color: isDark ? '#DDD' : '#fff',
       textAlign: 'center',
     },
     fotoContainer: {
@@ -88,6 +86,7 @@ export default function PelaporanScreen({navigation}: any) {
     lokasiText: {
       fontSize: 16,
       marginBottom: 5,
+      color: isDark ? '#DDD' : '#000',
     },
   });
 
@@ -174,7 +173,7 @@ export default function PelaporanScreen({navigation}: any) {
     const filename = foto.split('/').pop();
     const fileExtension = filename?.split('.').pop();
     const validExtensions = ['jpg', 'jpeg', 'png'];
-    
+
     if (!validExtensions.includes(fileExtension?.toLowerCase() || '')) {
       Alert.alert('Error', 'File yang diupload harus berupa gambar.');
       return;
@@ -191,23 +190,22 @@ export default function PelaporanScreen({navigation}: any) {
       type: `image/${fileExtension?.toLowerCase()}`,
     });
 
-    axios.post(`${API}/reports/store`, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    .then(res => {
-      resetForm();
-      setIsLoading(false);
-      Alert.alert('Terima Kasih', res.data.message);
-    })
-    .catch(err => {
-      setIsLoading(false);
-      console.log(err.response.data)
-    })
+    axios
+      .post(`${API}/reports/store`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(res => {
+        resetForm();
+        setIsLoading(false);
+        Alert.alert('Terima Kasih', res.data.message);
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log(err.response.data);
+      });
   }
-
-    
 
   const [userId, setUserId] = React.useState(0);
   const [nama, setNama] = React.useState('');
@@ -232,6 +230,7 @@ export default function PelaporanScreen({navigation}: any) {
           placeholder="Masukkan Nama"
           value={nama}
           onChangeText={setNama}
+          placeholderTextColor={isDark ? '#DDD' : '#000'}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -246,33 +245,36 @@ export default function PelaporanScreen({navigation}: any) {
           defaultValue={jenis !== '' ? jenis : 'Pilih Jenis Pengaduan'}
           buttonStyle={{
             borderRadius: 5,
-            borderColor: '#ccc',
+            borderColor: isDark ? '#DDD' : '#000',
             borderWidth: 1,
             paddingVertical: 8,
             paddingHorizontal: 10,
             width: '100%',
+            backgroundColor: isDark ? '#001F3F' : '#fff',
           }}
           buttonTextStyle={{
             fontSize: 16,
-            color: '#000',
+            color: isDark ? '#DDD' : '#000',
           }}
           dropdownStyle={{
             backgroundColor: '#fff',
           }}
           rowStyle={{
-            backgroundColor: '#fff',
+            backgroundColor: isDark ? '#001F3F' : '#fff',
             borderBottomColor: '#ccc',
           }}
           rowTextStyle={{
             fontSize: 16,
+            color: isDark ? '#DDD' : '#000',
           }}
         />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Lokasi</Text>
-        {lokasi.address !== '' ? <Text style={styles.lokasiText}>{lokasi.address}</Text> : null}
-        <Button
-          title="Pilih Lokasi"
+        {lokasi.address !== '' ? (
+          <Text style={styles.lokasiText}>{lokasi.address}</Text>
+        ) : null}
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate('Map', {
               updateLokasi: updateLokasi,
@@ -281,10 +283,18 @@ export default function PelaporanScreen({navigation}: any) {
               address: lokasi.address,
             });
           }}
-        />
+          style={{
+            backgroundColor: isDark ? '#001F3F' : '#279EFF',
+            borderRadius: 5,
+            padding: 10,
+          }}>
+          <Text style={{color: isDark ? '#DDD' : '#fff', textAlign: 'center'}}>Pilih Lokasi</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>{jenis === 'Perbaikan' ? 'Keluhan' : 'Kebutuhan'}</Text>
+        <Text style={styles.label}>
+          {jenis === 'Perbaikan' ? 'Keluhan' : 'Kebutuhan'}
+        </Text>
         <TextInput
           style={styles.input}
           value={keluhan}
@@ -292,7 +302,10 @@ export default function PelaporanScreen({navigation}: any) {
           multiline={true}
           numberOfLines={5}
           textAlignVertical="top"
-          placeholder={jenis === 'Perbaikan' ? 'Masukkan Keluhan' : 'Masukkan Kebutuhan'}
+          placeholder={
+            jenis === 'Perbaikan' ? 'Masukkan Keluhan' : 'Masukkan Kebutuhan'
+          }
+          placeholderTextColor={isDark ? '#DDD' : '#000'}
         />
       </View>
       <View style={styles.buttonContainer}>
@@ -344,13 +357,12 @@ export default function PelaporanScreen({navigation}: any) {
               create_report();
               return;
             }
-            
           }}>
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonKirimText}>Kirim</Text>
-            )}
+          {isLoading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonKirimText}>Kirim</Text>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>

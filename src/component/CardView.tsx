@@ -2,12 +2,14 @@ import React from 'react';
 import {StyleSheet, View, Text, Image, ActivityIndicator} from 'react-native';
 import {API} from '../config/API';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {ThemeContext} from '../context/ThemeContext';
 
 export default function CardView({report}: any) {
+  const {isDark} = React.useContext(ThemeContext);
   const styles = StyleSheet.create({
     card: {
       width: '100%',
-      backgroundColor: '#279EFF',
+      backgroundColor: isDark ? '#001F3F' : '#279EFF',
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
@@ -16,18 +18,18 @@ export default function CardView({report}: any) {
       flexDirection: 'row',
     },
     cardTitle: {
-      color: '#fff',
+      color: isDark ? '#DDD' : '#fff',
       fontSize: 18,
       fontWeight: 'bold',
       marginBottom: 5,
     },
     cardLokasi: {
-      color: '#fff',
+      color: isDark ? '#DDD' : '#fff',
       fontSize: 10,
       marginBottom: 5,
     },
     cardText: {
-      color: '#fff',
+      color: isDark ? '#DDD' : '#fff',
       fontSize: 13,
     },
     textContainer: {

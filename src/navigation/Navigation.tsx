@@ -12,11 +12,13 @@ import NetInfo from '@react-native-community/netinfo';
 import NoInternetScreen from '../screens/NoInternetScreen';
 import ForgotPWScreen from '../screens/ForgotPWScreen';
 import DetailLaporanScreen from '../screens/DetailLaporanScreen';
+import { ThemeContext } from '../context/ThemeContext';
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
   const {userInfo, splashLoading} = React.useContext(AuthContext);
   const [isConnected, setIsConnected] = React.useState<boolean>(true);
+  const {isDark} = React.useContext(ThemeContext)
 
   React.useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -70,9 +72,9 @@ export default function Navigation() {
                   title: 'Detail Laporan',
                   headerTitleAlign: 'center',
                   headerStyle: {
-                    backgroundColor: '#00BFFF',
+                    backgroundColor: isDark ? '#001F3F' :'#00BFFF',
                   },
-                  headerTintColor: '#fff',
+                  headerTintColor: isDark ? '#DDD' :'#fff',
                   animation: 'slide_from_right'
                 }}
               />

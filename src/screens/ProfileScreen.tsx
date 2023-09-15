@@ -8,21 +8,27 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  Switch,
+  Modal,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import SettingComponent from '../component/SettingComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AuthContext} from '../context/AuthContext';
+import {AuthContext,} from '../context/AuthContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import axios from 'axios';
 import FormData from 'form-data';
 import {API} from '../config/API';
+import { ThemeContext } from '../context/ThemeContext';
 
 export default function ProfileScreen() {
   const {logout} = React.useContext(AuthContext);
+  const {isDark, toggleTheme} = React.useContext(ThemeContext);
   const [user, setUser] = React.useState<any>(null);
   const [foto, setFoto] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [themeModal, setThemeModal] = React.useState<boolean>(false);
 
   const getUser = async () => {
     const user = await AsyncStorage.getItem('user');
@@ -131,7 +137,13 @@ export default function ProfileScreen() {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: isDark ? '#000' : '#fff',
+      paddingHorizontal: 20,
+      paddingTop: 20,
+    },
+    darkContainer: {
+      flex: 1,
+      backgroundColor: '#222',
       paddingHorizontal: 20,
       paddingTop: 20,
     },
@@ -149,6 +161,7 @@ export default function ProfileScreen() {
       fontSize: 24,
       fontWeight: 'bold',
       marginTop: 10,
+      color: isDark ? '#DDD' : '#000',
     },
     userEmail: {
       fontSize: 16,
@@ -162,6 +175,7 @@ export default function ProfileScreen() {
       fontSize: 18,
       fontWeight: 'bold',
       marginBottom: 10,
+      color: isDark ? '#DDD' : '#000',
     },
     logoutBtn: {
       backgroundColor: '#FF5733', // Your desired background color
@@ -185,10 +199,51 @@ export default function ProfileScreen() {
       fontSize: 15,
       color: '#fff', // Text color
     },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    },
+    modalContent: {
+      backgroundColor: '#fff',
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      padding: 20,
+    },
+    modalHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    modalTitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    modalItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+    },
+    modalItemText: {
+      fontSize: 18,
+    },
+    closeButton: {
+      backgroundColor: '#f44',
+      padding: 10,
+      borderRadius: 5,
+      alignItems: 'center',
+    },
+    closeButtonText: {
+      fontSize: 16,
+      color: '#fff',
+    },
   });
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, isDark && styles.darkContainer]}>
       <View style={styles.profileContainer}>
         {isLoading ? (
           <ActivityIndicator animating={isLoading} size={60} color="#000" />
@@ -209,6 +264,28 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.settingSection}>
+        <Modal animationType="slide" transparent={true} visible={themeModal}>
+          <TouchableWithoutFeedback onPress={() => setThemeModal(false)}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>Theme</Text>
+                </View>
+                <View style={styles.modalItem}>
+                  <Text style={styles.modalItemText}>
+                    <Icon name="moon-o" style={{fontSize: 20}} /> Dark Mode
+                  </Text>
+                  <Switch
+                    value={isDark}
+                    onValueChange={toggleTheme}
+                    trackColor={{false: '#767577', true: '#81b0ff'}}
+                    ios_backgroundColor="#3e3e3e"
+                  />
+                </View>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
         <Text style={styles.sectionHeader}>Settings</Text>
         <TouchableOpacity onPress={() => Alert.alert('Coming Soon!')}>
           <SettingComponent
@@ -218,7 +295,7 @@ export default function ProfileScreen() {
             subtitle="Change Password"
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => Alert.alert('Coming Soon!')}>
+        <TouchableOpacity onPress={() => setThemeModal(true)}>
           <SettingComponent
             icon="cog"
             heading="Theme"

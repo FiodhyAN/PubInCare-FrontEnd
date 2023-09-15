@@ -9,16 +9,18 @@ import {
 } from 'react-native';
 import {AuthContext} from '../context/AuthContext';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ThemeContext } from '../context/ThemeContext';
 
 export default function StartScreen({navigation}: any) {
   const {logout, isLoading} = React.useContext(AuthContext);
+  const {isDark} = React.useContext(ThemeContext)
   const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
     button: {
       flexDirection: 'row',
-      backgroundColor: '#279EFF',
+      backgroundColor: isDark ? '#001F3F' : '#279EFF',
       padding: 10,
       borderRadius: 10,
       marginTop: 20,
@@ -49,16 +51,24 @@ export default function StartScreen({navigation}: any) {
       alignItems: 'center',
       justifyContent: 'center',
       marginBottom: 280,
+      padding: 5,
+    },
+    darkTitleContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 280,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      padding: 5,
     },
     title: {
       fontSize: 30,
       fontWeight: 'bold',
-      color: '#fff',
+      color: isDark ? '#DDD' : '#fff',
     },
     subtitle: {
       fontSize: 15,
       fontWeight: 'bold',
-      color: '#fff',
+      color: isDark ? '#DDD' : '#fff',
       textAlign: 'center',
     },
     buttonImage: {
@@ -70,10 +80,10 @@ export default function StartScreen({navigation}: any) {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('../assets/images/bg.jpeg')}
+        source={isDark ? require('../assets/images/bg-night.jpg') : require('../assets/images/bg.jpeg')}
         style={{flex: 1, justifyContent: 'center'}}
         resizeMode="cover">
-          <View style={styles.titleContainer}>
+          <View style={isDark ? styles.darkTitleContainer : styles.titleContainer}>
             <Text style={styles.title}>PubInCare</Text>
             <Text style={styles.subtitle}>
               Fixing Our Hometown One Step At A Time
@@ -105,7 +115,7 @@ export default function StartScreen({navigation}: any) {
               navigation.navigate('PelaporanNavigation');
             }}
             style={styles.button}>
-            <Icon name="clipboard-text-outline" color={'#fff'} size={50} />
+            <Icon name="clipboard-text-outline" color={isDark ? '#DDD' : '#fff'} size={50} />
             <Text style={styles.buttonText}>Pelaporan</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -113,7 +123,7 @@ export default function StartScreen({navigation}: any) {
               Alert.alert('Coming Soon');
             }}
             style={styles.button}>
-              <Icon name="cellphone-marker" color={'#fff'} size={50} />
+              <Icon name="cellphone-marker" color={isDark ? '#DDD' : '#fff'} size={50} />
             <Text style={styles.buttonText}>Turis Spot</Text>
           </TouchableOpacity>
         </View>

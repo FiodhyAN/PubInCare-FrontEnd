@@ -6,34 +6,36 @@ import HistoryScreen from '../screens/HistoryScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import {TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import { ThemeContext } from '../context/ThemeContext';
 
 const Tab = createBottomTabNavigator();
 export default function PelaporanNavigation() {
+  const {isDark} = React.useContext(ThemeContext);
   const navigation = useNavigation();
   return (
     <Tab.Navigator
       initialRouteName="Report Form"
       screenOptions={{
         tabBarInactiveTintColor: 'gray',
-        tabBarActiveTintColor: '#fff',
+        tabBarActiveTintColor: isDark ? '#DDD' :'#fff',
         headerShown: true,
         headerTitleAlign: 'center',
         headerTitleStyle: {
           fontWeight: 'bold',
-          color: '#fff',
+          color: isDark ? '#DDD' : '#fff',
         },
         headerStyle: {
-          backgroundColor: '#00BFFF',
+          backgroundColor: isDark ? '#001F3F' :'#00BFFF',
         },
         tabBarStyle: {
-          backgroundColor: '#00BFFF',
+          backgroundColor: isDark ? '#001F3F' :'#00BFFF',
         },
         headerLeft: () => (
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <MaterialCommunityIcons
               name="arrow-left" // Choose the appropriate icon for your back button
               size={30}
-              style={{marginLeft: 15, color: '#fff'}}
+              style={{marginLeft: 15, color: isDark ? '#DDD' :'#fff'}}
             />
           </TouchableOpacity>
         ),
