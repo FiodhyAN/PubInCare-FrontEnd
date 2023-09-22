@@ -1451,6 +1451,11 @@
     "@types/yargs" "^17.0.8"
     chalk "^4.0.0"
 
+"@joaosousa/react-native-progress-steps@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.npmjs.org/@joaosousa/react-native-progress-steps/-/react-native-progress-steps-0.4.0.tgz"
+  integrity sha512-+78GHoWp9tni+4w3ok8G4peHRBZmFTRLm+PTgDHf6sH7oS+FJiodG07t/Huz/udk0BMxBlSAp0mWu6fTZGlRtg==
+
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
   resolved "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.3.tgz"

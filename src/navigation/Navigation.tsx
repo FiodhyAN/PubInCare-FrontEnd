@@ -13,6 +13,7 @@ import NoInternetScreen from '../screens/NoInternetScreen';
 import ForgotPWScreen from '../screens/ForgotPWScreen';
 import DetailLaporanScreen from '../screens/DetailLaporanScreen';
 import { ThemeContext } from '../context/ThemeContext';
+import StatusScreen from '../screens/StatusScreen';
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
@@ -70,6 +71,20 @@ export default function Navigation() {
                 options={{
                   headerShown: true,
                   title: 'Detail Laporan',
+                  headerTitleAlign: 'center',
+                  headerStyle: {
+                    backgroundColor: isDark ? '#001F3F' :'#00BFFF',
+                  },
+                  headerTintColor: isDark ? '#DDD' :'#fff',
+                  animation: 'slide_from_right'
+                }}
+              />
+              <Stack.Screen
+                name='Status'
+                component={StatusScreen}
+                options={{
+                  headerShown: true,
+                  title: 'Status Laporan',
                   headerTitleAlign: 'center',
                   headerStyle: {
                     backgroundColor: isDark ? '#001F3F' :'#00BFFF',

@@ -143,7 +143,7 @@ export default function LoginScreen({navigation, route}: any) {
         </TouchableOpacity>
       </View>
       <View style={{flexDirection: 'row', marginTop: 5}}>
-        <Text style={{ color: isDark ? '#ddd' : '000' }}>Forgot Password? </Text>
+        <Text style={{ color: isDark ? '#ddd' : '#000' }}>Forgot Password? </Text>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ForgotPW');

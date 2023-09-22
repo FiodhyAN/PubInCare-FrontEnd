@@ -25,7 +25,7 @@ interface Report {
   keluhan: string;
   nama_pengadu: string;
 }
-export default function DetailLaporanScreen({route}: any) {
+export default function DetailLaporanScreen({route, navigation}: any) {
   const id = route.params.reportId;
 
   const [report, setReport] = React.useState<Report | null>(null);
@@ -174,9 +174,7 @@ export default function DetailLaporanScreen({route}: any) {
         </View>
       </View>
       <TouchableOpacity
-        onPress={() => {
-          Alert.alert('Coming Soon', 'Fitur ini akan segera hadir');
-        }}
+        onPress={() => {navigation.navigate('Status', {reportId: id})}}
         style={styles.button}>
         <Text style={{color: isDark ? '#DDD' : '#fff', fontSize: 16, fontWeight: 'bold'}}>
           Cek Status
