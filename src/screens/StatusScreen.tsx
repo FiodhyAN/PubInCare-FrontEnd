@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Linking,
 } from 'react-native';
 import ProgressSteps, {
   Title,
@@ -19,12 +20,14 @@ import {API} from '../config/API';
 export default function StatusScreen({route}: any) {
   const [jenisLaporan, setJenisLaporan] = React.useState('');
   const [step, setStep] = React.useState(0);
+  const [noLaporan, setNoLaporan] = React.useState('');
   React.useEffect(() => {
     axios
       .get(API + '/reports/' + route.params.reportId + '/status')
       .then(({data}) => {
         console.log(data);
         setJenisLaporan(data.jenis_pengaduan);
+        setNoLaporan(data.no_laporan);
         if (data.jenis_pengaduan === 'Perbaikan') {
           if (
             data.status === 'Menunggu Admin' ||
@@ -101,6 +104,14 @@ export default function StatusScreen({route}: any) {
     },
   });
 
+  function sendWA() {
+    let message =
+      'Halo Admin, saya ingin bertanya mengenai laporan ' + noLaporan;
+    let url =
+      'https://api.whatsapp.com/send?phone=6287877716373&text=' + message;
+    Linking.openURL(url);
+  }
+
   if (jenisLaporan === 'Perbaikan') {
     return (
       <View style={styles.container}>
@@ -153,7 +164,7 @@ export default function StatusScreen({route}: any) {
                   <View style={styles.chatAdminContainer}>
                     <TouchableOpacity
                       style={styles.chatAdminButton}
-                      onPress={() => Alert.alert('Hubungi Admin')}>
+                      onPress={() => sendWA()}>
                       <Icon name="comments" size={20} color="#fff" />
                       <Text style={styles.chatAdminText}> Hubungi Admin</Text>
                     </TouchableOpacity>
@@ -180,7 +191,7 @@ export default function StatusScreen({route}: any) {
                   <View style={styles.chatAdminContainer}>
                     <TouchableOpacity
                       style={styles.chatAdminButton}
-                      onPress={() => Alert.alert('Hubungi Admin')}>
+                      onPress={() => sendWA()}>
                       <Icon name="comments" size={20} color="#fff" />
                       <Text style={styles.chatAdminText}> Hubungi Admin</Text>
                     </TouchableOpacity>
@@ -200,9 +211,7 @@ export default function StatusScreen({route}: any) {
                     />
                   </View>
                   <View style={styles.statusTextContainer}>
-                    <Text style={styles.statusText}>
-                      Laporan Dijalankan
-                    </Text>
+                    <Text style={styles.statusText}>Laporan Dijalankan</Text>
                   </View>
                   <View style={styles.chatAdminContainer}>
                     <TouchableOpacity
@@ -313,9 +322,7 @@ export default function StatusScreen({route}: any) {
                     />
                   </View>
                   <View style={styles.statusTextContainer}>
-                    <Text style={styles.statusText}>
-                      Laporan Dijalankan
-                    </Text>
+                    <Text style={styles.statusText}>Laporan Dijalankan</Text>
                   </View>
                   <View style={styles.chatAdminContainer}>
                     <TouchableOpacity
