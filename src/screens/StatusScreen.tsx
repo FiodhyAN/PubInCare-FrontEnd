@@ -29,10 +29,10 @@ export default function StatusScreen({route}: any) {
         setJenisLaporan(data.jenis_pengaduan);
         setNoLaporan(data.no_laporan);
         if (data.jenis_pengaduan === 'Perbaikan') {
-          if (
-            data.status === 'Menunggu Admin' ||
-            data.status === 'Diterima Sistem'
-          ) {
+          if (data.status === 'Menunggu Admin') {
+            setStep(0);
+          }
+          if(data.status === 'Diterima Sistem') {
             setStep(1);
           }
           if (data.status === 'Diterima Admin') {

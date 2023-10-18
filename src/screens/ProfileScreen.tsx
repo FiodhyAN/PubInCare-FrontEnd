@@ -22,7 +22,7 @@ import FormData from 'form-data';
 import {API} from '../config/API';
 import { ThemeContext } from '../context/ThemeContext';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({navigation}:any) {
   const {logout} = React.useContext(AuthContext);
   const {isDark, toggleTheme} = React.useContext(ThemeContext);
   const [user, setUser] = React.useState<any>(null);
@@ -307,7 +307,7 @@ export default function ProfileScreen() {
 
       <View style={[styles.settingSection, {marginBottom: 20}]}>
         <Text style={styles.sectionHeader}>Other Options</Text>
-        <TouchableOpacity onPress={() => Alert.alert('Coming Soon!')}>
+        <TouchableOpacity onPress={() => navigation.navigate('About')}>
           <SettingComponent
             icon="information"
             heading="About"
